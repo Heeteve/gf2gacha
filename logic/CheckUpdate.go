@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"gf2gacha/util"
 	"github.com/pkg/errors"
 	"io"
 	"net/http"
@@ -22,5 +23,9 @@ func CheckUpdate() (string, error) {
 		return "", err
 	}
 
-	return string(bodyBytes), nil
+	newVersion := string(bodyBytes)
+	if util.GetVersion() != newVersion {
+		return newVersion, nil
+	}
+	return "", nil
 }
