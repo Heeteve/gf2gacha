@@ -4,11 +4,17 @@
 
 body {
     margin: 0;
-    font-family: "MapleMono","Microsoft Yahei",sans-serif;
+    font-family: "SmileySans","Microsoft Yahei",sans-serif;
 }
 
 @font-face {
     font-family: "MapleMono";
     src: local(""),
     url("assets/fonts/MapleMono-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "SmileySans";
+    src: local(""),
+    url("assets/fonts/SmileySans-Oblique.ttf.woff2");
 }

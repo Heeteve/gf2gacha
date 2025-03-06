@@ -86,10 +86,10 @@ const option = {
     </div>
     <div class="w-full text-sm text-gray-400">五星抽卡记录：</div>
     <div class="w-full flex flex-wrap gap-2">
-      <el-tag class="text-sm w-32" v-for="record in pool.recordList" effect="dark" :type="record.count<=40?'success':record.count<=60?'primary':record.count<=65?'warning':'danger'">
+      <el-tag class="relative text-sm w-32" v-for="record in pool.recordList" effect="dark" :type="record.count<=40?'success':record.count<=60?'primary':record.count<=65?'warning':'danger'">
         <span>{{record.name}}</span>
         <span class="font-bold">「{{ record.count }}」</span>
-        <span v-if="record.lose" class="text-purple-600 font-bold">歪</span>
+        <span v-if="record.lose" class="text-purple-600 font-bold absolute right-2">歪</span>
       </el-tag>
     </div>
   </div>
