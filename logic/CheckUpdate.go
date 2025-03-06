@@ -1,25 +1,26 @@
 package logic
 
 import (
-	"context"
-	"gf2gacha/logger"
-	"gf2gacha/util"
-	"github.com/google/go-github/v63/github"
 	"github.com/pkg/errors"
+	"io"
 	"net/http"
 )
 
 func CheckUpdate() (string, error) {
-	client := github.NewClient(http.DefaultClient)
-	release, _, err := client.Repositories.GetLatestRelease(context.Background(), "MatchaCabin", "gf2gacha")
+	resp, err := http.Get("https://gfl2worker.mcc.wiki/gf2gacha/version")
 	if err != nil {
-		return "", errors.WithStack(err)
+		return "", err
 	}
-	logger.Logger.Infof("Latest release: %s", *release.TagName)
+	defer resp.Body.Close()
 
-	if util.GetVersion() != release.GetTagName() {
-		return release.GetTagName(), nil
+	if resp.StatusCode != 200 {
+		return "", errors.New(resp.Status)
 	}
 
-	return "", nil
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(bodyBytes), nil
 }

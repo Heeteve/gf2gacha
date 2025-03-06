@@ -60,6 +60,6 @@ jobs:
           r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.R2_BUCKET }}
           source-dir: |
-            build/bin/gf2gacha.exe.exe
+            build/bin/gf2gacha.exe
             gf2gacha.zip
           destination-dir: ./

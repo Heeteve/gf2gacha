@@ -1,10 +1,6 @@
 package logic
 
 import (
-	"context"
-	"gf2gacha/logger"
-	"gf2gacha/util"
-	"github.com/google/go-github/v63/github"
 	"github.com/inconshreveable/go-update"
 	"github.com/pkg/errors"
 	"net/http"
@@ -13,68 +9,25 @@ import (
 )
 
 func ApplyUpdate() error {
-	client := github.NewClient(http.DefaultClient)
-	release, _, err := client.Repositories.GetLatestRelease(context.Background(), "MatchaCabin", "gf2gacha")
+	resp, err := http.Get("https://gfl2bucket.mcc.wiki/gf2gacha.exe")
 	if err != nil {
-		return errors.WithStack(err)
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return errors.New(resp.Status)
 	}
 
-	if util.GetVersion() == release.GetTagName() {
-		return nil
+	err = update.Apply(resp.Body, update.Options{})
+	if err != nil {
+		return err
 	}
 
-	var link string
-	for _, asset := range release.Assets {
-		if asset.GetName() == "gf2gacha.exe" {
-			link = asset.GetBrowserDownloadURL()
-			break
-		}
+	err = restart()
+	if err != nil {
+		return err
 	}
-
-	if link != "" {
-		proxyLink := `https://mirror.ghproxy.com/` + link
-		logger.Logger.Infof("代理链接:%s", proxyLink)
-		//优先尝试用国内代理下载
-		respProxy, err := http.Get(proxyLink)
-		if os.IsTimeout(err) {
-			logger.Logger.Infof("源链接:%s", link)
-			resp, err := http.Get(link)
-			if err != nil {
-				return errors.WithStack(err)
-			}
-			defer resp.Body.Close()
-			logger.Logger.Infof("下载成功")
-			err = update.Apply(respProxy.Body, update.Options{})
-			if err != nil {
-				return errors.WithStack(err)
-			}
-			logger.Logger.Infof("更新成功")
-
-			err = restart()
-			if err != nil {
-				return errors.WithStack(err)
-			}
-			logger.Logger.Infof("重启成功")
-			os.Exit(1)
-		} else if err != nil {
-			return errors.WithStack(err)
-		}
-		defer respProxy.Body.Close()
-		logger.Logger.Infof("使用代理下载成功")
-
-		err = update.Apply(respProxy.Body, update.Options{})
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		logger.Logger.Infof("更新成功")
-
-		err = restart()
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		logger.Logger.Infof("重启成功")
-		os.Exit(1)
-	}
+	os.Exit(0)
 
 	return nil
 }
