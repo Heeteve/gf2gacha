@@ -30,7 +30,7 @@ const title = (): string => {
       return `未知PoolType: ${props.pool.poolType}`
   }
 }
-const tagType = ['primary', 'success', 'warning', 'danger']
+// const tagType = ['primary', 'success', 'warning', 'danger']
 
 const option = {
   tooltip: {
@@ -70,7 +70,7 @@ const option = {
 </script>
 
 <template>
-  <div class="basis-72 shrink-0 grow-0 flex flex-col items-center gap-2 my-2" v-if="pool.gachaCount">
+  <div class="w-xl shrink-0 grow-0 flex flex-col items-center gap-2 my-2" v-if="pool.gachaCount">
     <div class="font-bold text-xl">{{ title() }}</div>
     <div class="h-64 w-64">
       <v-chart class="h-64" :option="option"></v-chart>
@@ -89,7 +89,7 @@ const option = {
       <el-tag class="relative text-sm w-32" v-for="record in pool.recordList" effect="dark" :type="record.count<=40?'success':record.count<=60?'primary':record.count<=65?'warning':'danger'">
         <span>{{record.name}}</span>
         <span class="font-bold">「{{ record.count }}」</span>
-        <span v-if="record.lose" class="text-purple-600 font-bold absolute right-2">歪</span>
+        <span v-if="record.lose" class="text-purple-600 font-bold absolute right-1">歪</span>
       </el-tag>
     </div>
   </div>

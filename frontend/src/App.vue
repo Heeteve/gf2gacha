@@ -30,7 +30,7 @@ import CommunityExchangeList = model.CommunityExchangeList;
 const currentUid = ref("");
 const uidList = ref<string[]>([]);
 const poolList = ref<Pool[]>([]);
-const logInfo = ref<LogInfo>({})
+const logInfo = ref<LogInfo>(new LogInfo)
 const exchangeList = ref<CommunityExchangeList[]>([])
 const exchangeSelectedList = ref<number[]>([])
 const loading = ref(false);
@@ -230,7 +230,7 @@ onMounted(async () => {
       <div class="flex items-center gap-2">
         <el-button type="primary" class="font-bold" @click="handleCommunityTasks">一键社区</el-button>
         <div>UID:</div>
-        <el-select v-model="currentUid" class="w-28" @change="getAllPoolInfo">
+        <el-select v-model="currentUid" class="!w-28" @change="getAllPoolInfo">
           <el-option v-for="uid in uidList" :key="uid" :label="uid" :value="uid"/>
         </el-select>
         <el-button text :icon="Connection" circle @click="openInfoDialog"/>
