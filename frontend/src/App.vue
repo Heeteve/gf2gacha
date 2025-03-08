@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import {onMounted, ref} from "vue";
 import {
-  ApplyUpdate,
-  CheckUpdate,
   ExportMccExcel,
   ExportRawJson,
   GetCommunityExchangeList,
+  GetCurrentVersion,
+  GetLatestVersion,
   GetLogInfo,
   GetPoolInfo,
   GetSettingExchangeList,
@@ -15,18 +15,20 @@ import {
   ImportRawJson,
   MergeEreRecord,
   SaveSettingExchangeList,
-  UpdatePoolInfo
+  UpdatePoolInfo,
+  UpdateTo
 } from "../wailsjs/go/main/App";
 import PoolCard from "./components/PoolCard.vue";
 import {model} from "../wailsjs/go/models";
 import 'element-plus/es/components/message/style/css'
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage, ElMessageBox} from "element-plus";
 import {Connection, CopyDocument, Setting as SettingIcon} from "@element-plus/icons-vue";
 import {ClipboardSetText} from "../wailsjs/runtime";
 import Pool = model.Pool;
 import LogInfo = model.LogInfo;
 import CommunityExchangeList = model.CommunityExchangeList;
 
+const version = ref('')
 const currentUid = ref("");
 const uidList = ref<string[]>([]);
 const poolList = ref<Pool[]>([]);
@@ -36,7 +38,6 @@ const exchangeSelectedList = ref<number[]>([])
 const loading = ref(false);
 const dialogInfoVisible = ref(false)
 const dialogSettingVisible = ref(false)
-const newVersion = ref('')
 
 const getUidList = async () => {
   await GetUserList().then(result => {
@@ -172,15 +173,18 @@ const handleCommunityTasks = () => {
 }
 
 const checkUpdate = () => {
-  CheckUpdate().then(result => {
-    newVersion.value = result
+  GetLatestVersion().then(latestVersion => {
+    if (latestVersion != version.value) {
+      ElMessageBox.confirm("有可用的新版本，是否升级", latestVersion, {confirmButtonText: "是", cancelButtonText: "否", type: 'info'}).then(() => {
+        const loading = ElLoading.service({lock: true, text: `Update to ${latestVersion}...`, background: 'rgba(0, 0, 0, 0.7)'})
+        UpdateTo(latestVersion).catch(err => {
+          ElMessage({message: err, type: 'error', plain: true, showClose: true, duration: 2000})
+        }).finally(() => {
+          loading.close()
+        })
+      })
+    }
   })
-}
-
-const applyUpdate = async () => {
-  loading.value = true
-  await ApplyUpdate()
-  loading.value = false
 }
 
 const onExchangeListChange = () => {
@@ -193,10 +197,18 @@ onMounted(async () => {
     currentUid.value = uidList.value[0]
     await getAllPoolInfo()
   }
-  checkUpdate()
-  GetCommunityExchangeList().then(result => {
+
+  await GetCurrentVersion().then(res => {
+    if (res) {
+      version.value = res;
+    }
+  })
+
+  await GetCommunityExchangeList().then(result => {
     exchangeList.value = result
   })
+
+  checkUpdate()
 })
 
 </script>
@@ -225,7 +237,6 @@ onMounted(async () => {
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <el-button type="warning" class="font-bold ml-3" v-if="newVersion" @click="applyUpdate">更新到{{ newVersion }}</el-button>
       </div>
       <div class="flex items-center gap-2">
         <el-button type="primary" class="font-bold" @click="handleCommunityTasks">一键社区</el-button>

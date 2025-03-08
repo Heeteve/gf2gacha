@@ -62,4 +62,4 @@ jobs:
           source-dir: |
             build/bin/gf2gacha.exe
             gf2gacha.zip
-          destination-dir: ./
+          destination-dir: gf2gacha/${{ github.ref_name }}/

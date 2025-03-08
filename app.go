@@ -223,8 +223,12 @@ func (a *App) HandleCommunityTasks() (messageList []string, err error) {
 	return
 }
 
-func (a *App) CheckUpdate() (string, error) {
-	version, err := logic.CheckUpdate()
+func (a *App) GetCurrentVersion() string {
+	return util.GetVersion()
+}
+
+func (a *App) GetLatestVersion() (string, error) {
+	version, err := logic.GetLatestVersion()
 	if err != nil {
 		logger.Logger.Error(err)
 		return "", err
@@ -232,8 +236,8 @@ func (a *App) CheckUpdate() (string, error) {
 	return version, nil
 }
 
-func (a *App) ApplyUpdate() (string, error) {
-	err := logic.ApplyUpdate()
+func (a *App) UpdateTo(version string) (string, error) {
+	err := logic.UpdateTo(version)
 	if err != nil {
 		logger.Logger.Error(err)
 		return "", err

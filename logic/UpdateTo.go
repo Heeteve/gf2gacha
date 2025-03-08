@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"fmt"
 	"github.com/inconshreveable/go-update"
 	"github.com/pkg/errors"
 	"net/http"
@@ -8,8 +9,8 @@ import (
 	"os/exec"
 )
 
-func ApplyUpdate() error {
-	resp, err := http.Get("https://gfl2bucket.mcc.wiki/gf2gacha.exe")
+func UpdateTo(version string) error {
+	resp, err := http.Get(fmt.Sprintf("https://gfl2bucket.mcc.wiki/gf2gacha/%s/gf2gacha.exe", version))
 	if err != nil {
 		return err
 	}
