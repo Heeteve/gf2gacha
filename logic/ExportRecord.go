@@ -116,6 +116,10 @@ func ExportMccExcel(uid, saveDir string) error {
 				sheetName = "军备提升"
 			case 5:
 				sheetName = "初始采购"
+			case 6:
+				sheetName = "自选人形"
+			case 7:
+				sheetName = "自选武器"
 			case 8:
 				sheetName = "神秘箱"
 			default:

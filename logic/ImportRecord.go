@@ -88,6 +88,10 @@ func ImportMccExcel(uid, excelPath string) error {
 			poolType = 4
 		case "初始采购":
 			poolType = 5
+		case "自选人形":
+			poolType = 6
+		case "自选武器":
+			poolType = 7
 		case "神秘箱":
 			poolType = 8
 		default:
