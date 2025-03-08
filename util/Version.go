@@ -1,6 +1,6 @@
 package util
 
-const version = "v1.12.2"
+const version = ""
 
 func GetVersion() string {
 	return version

@@ -9,5 +9,12 @@
   "author": {
     "name": "Matcha",
     "email": "admin@mcc.wiki"
+  },
+  "info": {
+    "companyName": "MccWiki",
+    "productName": "gf2gacha",
+    "productVersion": "",
+    "copyright": "Copyright 2024 MccWiki",
+    "comments": "A tool for storing and analyzing GFL2 gacha records"
   }
 }

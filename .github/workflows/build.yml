@@ -11,8 +11,11 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+
+      - name: Write Version
+        run: |
+          (Get-Content "util/Version.go") -replace 'const version = ""', 'const version = "${{ github.ref_name }}"' | Set-Content "util/Version.go"
+          (Get-Content "wails.json") -replace '"productVersion": ""', '"productVersion": "${{ github.ref_name }}"' | Set-Content "wails.json"
 
       - name: Setup GoLang
         uses: actions/setup-go@v5
