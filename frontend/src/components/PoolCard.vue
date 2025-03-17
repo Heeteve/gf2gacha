@@ -5,8 +5,8 @@ import {PieChart} from 'echarts/charts';
 import {LegendComponent, TitleComponent, TooltipComponent} from 'echarts/components';
 import {CanvasRenderer} from 'echarts/renderers';
 import VChart from 'vue-echarts';
-import Pool = model.Pool;
 import {ref} from "vue";
+import Pool = model.Pool;
 
 use([PieChart, TitleComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
 
@@ -68,11 +68,11 @@ const option = {
   ],
 }
 
-const isDesc=ref(true)
-const getOrderedRecordList=()=>{
-  if (isDesc.value){
+const isDesc = ref(true)
+const getOrderedRecordList = () => {
+  if (isDesc.value && props.pool.recordList) {
     return props.pool.recordList.slice().reverse()
-  }else{
+  } else {
     return props.pool.recordList
   }
 }
@@ -92,16 +92,16 @@ const getOrderedRecordList=()=>{
       <div class="w-full text-sm text-purple-600">四星: {{ pool.rank4Count }} [{{ pool.gachaCount > 0 ? Math.round(pool.rank4Count * 10000 / pool.gachaCount) / 100 + '%' : '0%' }}]</div>
       <div class="w-full text-sm text-blue-600">三星: {{ pool.rank3Count }} [{{ pool.gachaCount > 0 ? Math.round(pool.rank3Count * 10000 / pool.gachaCount) / 100 + '%' : '0%' }}]</div>
       <div class="w-full text-sm text-green-600">平均出金抽数：{{ pool.rank5Count > 0 ? ((pool.gachaCount - pool.storedCount) / pool.rank5Count).toFixed(1) : '无' }}</div>
-      <div class="w-full text-sm text-pink-400">平均出Up抽数：{{ pool.rank5Count-pool.loseCount > 0 ? ((pool.gachaCount - pool.storedCount) / (pool.rank5Count-pool.loseCount)).toFixed(1) : '无' }}</div>
+      <div class="w-full text-sm text-pink-400">平均出Up抽数：{{ pool.rank5Count - pool.loseCount > 0 ? ((pool.gachaCount - pool.storedCount) / (pool.rank5Count - pool.loseCount)).toFixed(1) : '无' }}</div>
       <div class="w-full text-sm text-red-600" v-if="pool.poolType==3||pool.poolType==4">歪率: {{ pool.rank5Count > 0 ? Math.round(pool.loseCount * 10000 / (pool.rank5Count - pool.guaranteesCount)) / 100 + '%' : '0%' }}</div>
     </div>
-    <div class="w-full text-sm text-gray-400 flex flex-row justify-between">
+    <div class="w-full text-sm text-gray-400 flex flex-row justify-between" v-if="pool.recordList">
       <div>五星抽卡记录：</div>
-      <div class="cursor-pointer mr-2 text-blue-400" @click="isDesc=!isDesc">{{ isDesc?'倒序':'正序' }}</div>
+      <div class="cursor-pointer mr-2 text-blue-400" @click="isDesc=!isDesc">{{ isDesc ? '倒序' : '正序' }}</div>
     </div>
     <div class="w-full flex flex-wrap gap-2">
       <el-tag class="relative text-sm w-32" v-for="record in getOrderedRecordList()" effect="dark" :type="record.count<=40?'success':record.count<=60?'primary':record.count<=65?'warning':'danger'">
-        <span>{{record.name}}</span>
+        <span>{{ record.name }}</span>
         <span class="font-bold">「{{ record.count }}」</span>
         <span v-if="record.lose" class="text-purple-600 font-bold absolute right-1">歪</span>
       </el-tag>
