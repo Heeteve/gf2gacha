@@ -278,3 +278,11 @@ func (a *App) GetSettingExchangeList() ([]int64, error) {
 func (a *App) SaveSettingExchangeList(exchangeList []int64) error {
 	return config.SetExchangeList(exchangeList)
 }
+
+func (a *App) GetSettingFont() (string, error) {
+	return config.GetFont(), nil
+}
+
+func (a *App) SaveSettingFont(newFont string) error {
+	return config.SetFont(newFont)
+}

@@ -64,3 +64,12 @@ func SetExchangeList(exchangeList []int64) error {
 	viper.Set("exchangeList", exchangeList)
 	return viper.WriteConfig()
 }
+
+func GetFont() string {
+	return viper.GetString("font")
+}
+
+func SetFont(newFont string) error {
+	viper.Set("font", newFont)
+	return viper.WriteConfig()
+}

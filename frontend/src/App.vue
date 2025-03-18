@@ -1,40 +1,24 @@
 <script lang="ts" setup>
-import {onMounted, ref} from "vue";
-import {
-  ExportMccExcel,
-  ExportRawJson,
-  GetCommunityExchangeList,
-  GetCurrentVersion,
-  GetLatestVersion,
-  GetLogInfo,
-  GetPoolInfo,
-  GetSettingExchangeList,
-  GetUserList,
-  HandleCommunityTasks,
-  ImportMccExcel,
-  ImportRawJson,
-  MergeEreRecord,
-  SaveSettingExchangeList,
-  UpdatePoolInfo,
-  UpdateTo
-} from "../wailsjs/go/main/App";
+import {onBeforeMount, onMounted, ref} from "vue";
+import {ExportMccExcel, ExportRawJson, GetCurrentVersion, GetLatestVersion, GetLogInfo, GetPoolInfo, GetSettingFont, GetUserList, HandleCommunityTasks, ImportMccExcel, ImportRawJson, MergeEreRecord, UpdatePoolInfo, UpdateTo} from "../wailsjs/go/main/App";
 import PoolCard from "./components/PoolCard.vue";
 import {model} from "../wailsjs/go/models";
 import 'element-plus/es/components/message/style/css'
 import {ElLoading, ElMessage, ElMessageBox} from "element-plus";
 import {Connection, CopyDocument, Setting as SettingIcon} from "@element-plus/icons-vue";
 import {ClipboardSetText} from "../wailsjs/runtime";
+import SettingDialog from "./components/SettingDialog.vue";
 import Pool = model.Pool;
 import LogInfo = model.LogInfo;
-import CommunityExchangeList = model.CommunityExchangeList;
+
 
 const version = ref('')
 const currentUid = ref("");
 const uidList = ref<string[]>([]);
 const poolList = ref<Pool[]>([]);
 const logInfo = ref<LogInfo>(new LogInfo)
-const exchangeList = ref<CommunityExchangeList[]>([])
-const exchangeSelectedList = ref<number[]>([])
+
+
 const loading = ref(false);
 const dialogInfoVisible = ref(false)
 const dialogSettingVisible = ref(false)
@@ -87,17 +71,6 @@ const openInfoDialog = async () => {
     logInfo.value = result
   })
   dialogInfoVisible.value = true
-}
-
-const openSettingDialog = async () => {
-  await GetSettingExchangeList().then(result => {
-    if (result) {
-      exchangeSelectedList.value = result
-    }
-  }).catch(err => {
-    ElMessage({message: err, type: 'error', plain: true, showClose: true, duration: 0})
-  })
-  dialogSettingVisible.value = true
 }
 
 const mergeEreRecord = async (typ: string) => {
@@ -187,9 +160,18 @@ const checkUpdate = () => {
   })
 }
 
-const onExchangeListChange = () => {
-  SaveSettingExchangeList(exchangeSelectedList.value)
-}
+onBeforeMount(async () => {
+  let body = document?.querySelector('body')
+  if (body) {
+    await GetSettingFont().then(result => {
+      if (result) {
+        body.style.fontFamily = result
+      } else {
+        body.style.fontFamily = 'ChillRoundM'
+      }
+    })
+  }
+})
 
 onMounted(async () => {
   await getUidList()
@@ -202,10 +184,6 @@ onMounted(async () => {
     if (res) {
       version.value = res;
     }
-  })
-
-  await GetCommunityExchangeList().then(result => {
-    exchangeList.value = result
   })
 
   checkUpdate()
@@ -245,7 +223,7 @@ onMounted(async () => {
           <el-option v-for="uid in uidList" :key="uid" :label="uid" :value="uid"/>
         </el-select>
         <el-button text :icon="Connection" circle @click="openInfoDialog"/>
-        <el-button class="!ml-0" text :icon="SettingIcon" circle @click="openSettingDialog"/>
+        <el-button class="!ml-0" text :icon="SettingIcon" circle @click="dialogSettingVisible = true"/>
       </div>
     </div>
     <div class="w-full flex flex-wrap gap-4">
@@ -278,20 +256,6 @@ onMounted(async () => {
         <el-alert title="AccessToken是您的临时登录凭证，请自行把控风险，切勿随意泄露" type="warning" show-icon :closable="false"></el-alert>
       </div>
     </el-dialog>
-    <el-dialog v-model="dialogSettingVisible" width="600">
-      <template #header>
-        <div class="text-xl font-bold">设置</div>
-      </template>
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-2">
-          <div class="w-24 shrink-0">社区兑换</div>
-          <div class="grow text-blue-500">
-            <el-checkbox-group v-model="exchangeSelectedList" @change="onExchangeListChange">
-              <el-checkbox v-for="item in exchangeList" :label="item.name" :value="item.id"></el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </div>
-      </div>
-    </el-dialog>
+    <SettingDialog v-model="dialogSettingVisible"/>
   </div>
 </template>

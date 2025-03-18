@@ -34,6 +34,10 @@ export function GetSettingExchangeList() {
   return window['go']['main']['App']['GetSettingExchangeList']();
 }
 
+export function GetSettingFont() {
+  return window['go']['main']['App']['GetSettingFont']();
+}
+
 export function GetUserList() {
   return window['go']['main']['App']['GetUserList']();
 }
@@ -56,6 +60,10 @@ export function MergeEreRecord(arg1, arg2) {
 
 export function SaveSettingExchangeList(arg1) {
   return window['go']['main']['App']['SaveSettingExchangeList'](arg1);
+}
+
+export function SaveSettingFont(arg1) {
+  return window['go']['main']['App']['SaveSettingFont'](arg1);
 }
 
 export function UpdatePoolInfo(arg1) {

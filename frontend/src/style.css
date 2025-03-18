@@ -1,12 +1,11 @@
 @import "tailwindcss";
 
 body {
-  margin: 0;
-  font-family: "ChillRoundM","Microsoft Yahei",sans-serif;
+    margin: 0;
 }
 
 @font-face {
-  font-family: "ChillRoundM";
-  src: local(""),
-  url("assets/fonts/ChillRoundM.otf");
+    font-family: "ChillRoundM";
+    src: local(""),
+    url("assets/fonts/ChillRoundM.otf");
 }

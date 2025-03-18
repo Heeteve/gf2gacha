@@ -18,6 +18,8 @@ export function GetPoolInfo(arg1:string,arg2:number):Promise<model.Pool>;
 
 export function GetSettingExchangeList():Promise<Array<number>>;
 
+export function GetSettingFont():Promise<string>;
+
 export function GetUserList():Promise<Array<string>>;
 
 export function HandleCommunityTasks():Promise<Array<string>>;
@@ -29,6 +31,8 @@ export function ImportRawJson(arg1:string,arg2:boolean):Promise<string>;
 export function MergeEreRecord(arg1:string,arg2:string):Promise<string>;
 
 export function SaveSettingExchangeList(arg1:Array<number>):Promise<void>;
+
+export function SaveSettingFont(arg1:string):Promise<void>;
 
 export function UpdatePoolInfo(arg1:boolean):Promise<Array<string>>;
 

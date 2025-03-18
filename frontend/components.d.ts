@@ -22,6 +22,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     PoolCard: typeof import('./src/components/PoolCard.vue')['default']
+    SettingDialog: typeof import('./src/components/SettingDialog.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
