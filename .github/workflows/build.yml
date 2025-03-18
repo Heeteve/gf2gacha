@@ -44,13 +44,14 @@ jobs:
       - name: Zip the folder
         run: powershell Compress-Archive -Path gf2gacha -DestinationPath gf2gacha.zip
 
-      - name: Create Release and Upload Release Asset
-        uses: softprops/action-gh-release@v1
+      - name: Build Changelog
+        run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
           files: |
             gf2gacha.zip
             gf2gacha.exe
