@@ -9,6 +9,7 @@ import {ref} from "vue";
 import {Share} from "@element-plus/icons-vue";
 import html2canvas from "html2canvas-pro";
 import Pool = model.Pool;
+import {ElMessage} from "element-plus";
 
 use([PieChart, TitleComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
 
@@ -109,7 +110,9 @@ const screenshot = async () => {
   // 复制到剪贴板
   await navigator.clipboard.write([
     new ClipboardItem({'image/png': blob})
-  ])
+  ]).then(() => {
+    ElMessage({message: '截图已复制到剪贴板', type: 'success', plain: true, showClose: true, duration: 2000})
+  })
 }
 
 </script>
