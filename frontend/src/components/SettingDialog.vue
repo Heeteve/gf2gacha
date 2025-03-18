@@ -17,7 +17,7 @@ const selectedFont = ref('')
 const fontList = ref<{ name: string, value: string }[]>([])
 const onFontChange = async (newFont: string) => {
   await SaveSettingFont(newFont)
-  let body=document?.querySelector('body')
+  let body = document?.querySelector('body')
   if (body) {
     body.style.fontFamily = newFont
   }
@@ -39,15 +39,15 @@ onBeforeMount(async () => {
     if (result) {
       //@ts-ignore
       result.forEach(item => {
-        fontList.value.push({name: item.fullName, value: item.postscriptName})
+        fontList.value.push({name: item.fullName, value: item.fullName})
       })
     }
   })
   await GetSettingFont().then(result => {
     if (result) {
-      selectedFont.value=result
-    }else{
-      selectedFont.value='ChillRoundM'
+      selectedFont.value = result
+    } else {
+      selectedFont.value = 'ChillRoundM'
     }
   })
 })
@@ -70,9 +70,9 @@ onBeforeMount(async () => {
       </div>
       <div class="flex items-center gap-2">
         <div class="w-24 shrink-0">字体</div>
-        <el-select v-model="selectedFont" @change="onFontChange" filterable>
-          <el-option key="ChillRoundM" label="寒蝉半圆体" value="ChillRoundM"/>
-          <el-option v-for="font in fontList" :key="font.value" :label="font.name" :value="font.value"/>
+        <el-select class="font-serif" v-model="selectedFont" @change="onFontChange" filterable>
+          <el-option class="font-serif" key="ChillRoundM" label="寒蝉半圆体" value="ChillRoundM"/>
+          <el-option class="font-serif" v-for="font in fontList" :key="font.value" :label="font.name" :value="font.value"/>
         </el-select>
       </div>
     </div>
