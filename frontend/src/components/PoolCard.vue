@@ -6,6 +6,8 @@ import {LegendComponent, TitleComponent, TooltipComponent} from 'echarts/compone
 import {CanvasRenderer} from 'echarts/renderers';
 import VChart from 'vue-echarts';
 import {ref} from "vue";
+import {Share} from "@element-plus/icons-vue";
+import html2canvas from "html2canvas-pro";
 import Pool = model.Pool;
 
 use([PieChart, TitleComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
@@ -77,11 +79,46 @@ const getOrderedRecordList = () => {
   }
 }
 
+const screenshotContainer = ref<HTMLElement | null>(null);
+const screenshot = async () => {
+  if (!screenshotContainer.value) {
+    return;
+  }
+
+  const canvas = await html2canvas(screenshotContainer.value, {
+    backgroundColor: '#fff',
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: screenshotContainer.value.scrollWidth,
+    windowHeight: screenshotContainer.value.scrollHeight,
+    scale: 2,
+    removeContainer: true,
+  });
+
+  // 转换为Blob
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) {
+        resolve(blob)
+      } else {
+        reject(new Error('Canvas 转换失败'))
+      }
+    }, 'image/png')
+  })
+
+  // 复制到剪贴板
+  await navigator.clipboard.write([
+    new ClipboardItem({'image/png': blob})
+  ])
+}
 
 </script>
 
 <template>
-  <div class="w-xl shrink-0 grow-0 flex flex-col items-center gap-2 my-2 p-4 shadow rounded-xl" v-if="pool.gachaCount">
+  <div ref="screenshotContainer" class="relative w-xl shrink-0 grow-0 flex flex-col items-center gap-2 my-2 p-4 shadow rounded-xl" v-if="pool.gachaCount">
+    <div class="absolute right-2 top-2">
+      <el-button text :icon="Share" size="large" circle @click="screenshot"/>
+    </div>
     <div class="font-bold text-xl">{{ title() }}</div>
     <div class="h-64 w-64">
       <v-chart class="h-64" :option="option"></v-chart>
