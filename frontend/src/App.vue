@@ -10,6 +10,7 @@ import {ClipboardSetText} from "../wailsjs/runtime";
 import SettingDialog from "./components/SettingDialog.vue";
 import Pool = model.Pool;
 import LogInfo = model.LogInfo;
+import {useLayoutStore} from "./stores/layout.ts";
 
 
 const version = ref('')
@@ -160,6 +161,8 @@ const checkUpdate = () => {
   })
 }
 
+const layoutStore = useLayoutStore()
+
 onBeforeMount(async () => {
   let body = document?.querySelector('body')
   if (body) {
@@ -226,7 +229,7 @@ onMounted(async () => {
         <el-button class="!ml-0" text :icon="SettingIcon" circle @click="dialogSettingVisible = true"/>
       </div>
     </div>
-    <div class="w-full flex flex-wrap gap-4">
+    <div class="w-full flex flex-wrap" :class="{'gap-16':layoutStore.layoutType===0,'gap-4':layoutStore.layoutType===1}">
       <PoolCard v-for="pool in poolList" :pool="pool"></PoolCard>
     </div>
     <el-dialog v-model="dialogInfoVisible" width="600">

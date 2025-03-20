@@ -38,6 +38,10 @@ export function GetSettingFont() {
   return window['go']['main']['App']['GetSettingFont']();
 }
 
+export function GetSettingLayout() {
+  return window['go']['main']['App']['GetSettingLayout']();
+}
+
 export function GetUserList() {
   return window['go']['main']['App']['GetUserList']();
 }
@@ -64,6 +68,10 @@ export function SaveSettingExchangeList(arg1) {
 
 export function SaveSettingFont(arg1) {
   return window['go']['main']['App']['SaveSettingFont'](arg1);
+}
+
+export function SaveSettingLayout(arg1) {
+  return window['go']['main']['App']['SaveSettingLayout'](arg1);
 }
 
 export function UpdatePoolInfo(arg1) {

@@ -286,3 +286,11 @@ func (a *App) GetSettingFont() (string, error) {
 func (a *App) SaveSettingFont(newFont string) error {
 	return config.SetFont(newFont)
 }
+
+func (a *App) GetSettingLayout() (int64, error) {
+	return config.GetLayout(), nil
+}
+
+func (a *App) SaveSettingLayout(layoutType int64) error {
+	return config.SetLayout(layoutType)
+}

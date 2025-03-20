@@ -73,3 +73,12 @@ func SetFont(newFont string) error {
 	viper.Set("font", newFont)
 	return viper.WriteConfig()
 }
+
+func GetLayout() int64 {
+	return viper.GetInt64("layout")
+}
+
+func SetLayout(layoutType int64) error {
+	viper.Set("layout", layoutType)
+	return viper.WriteConfig()
+}

@@ -8,8 +8,9 @@ import VChart from 'vue-echarts';
 import {ref} from "vue";
 import {Share} from "@element-plus/icons-vue";
 import html2canvas from "html2canvas-pro";
-import Pool = model.Pool;
 import {ElMessage} from "element-plus";
+import {useLayoutStore} from "../stores/layout.ts";
+import Pool = model.Pool;
 
 use([PieChart, TitleComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
 
@@ -115,10 +116,13 @@ const screenshot = async () => {
   })
 }
 
+const layoutStore = useLayoutStore()
+
 </script>
 
 <template>
-  <div ref="screenshotContainer" class="relative w-xl shrink-0 grow-0 flex flex-col items-center gap-2 my-2 p-4 shadow rounded-xl" v-if="pool.gachaCount">
+  <div ref="screenshotContainer" class="relative  shrink-0 grow-0 flex flex-col items-center gap-2 my-2 shadow-lg rounded-xl" v-if="pool.gachaCount"
+       :class="{'w-xl p-4':layoutStore.layoutType===0,'w-72 p-2':layoutStore.layoutType===1}">
     <div class="absolute right-2 top-2">
       <el-button text :icon="Share" size="large" circle @click="screenshot"/>
     </div>
