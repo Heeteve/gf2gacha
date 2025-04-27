@@ -10,7 +10,7 @@ var Engine *xorm.Engine
 
 func init() {
 	var err error
-	Engine, err = xorm.NewEngine("sqlite", "./gf2gacha.db")
+	Engine, err = xorm.NewEngine("sqlite", "./gf2gacha.db?_pragma=busy_timeout(2000)")
 	if err != nil {
 		logger.Logger.Panic(err)
 	}
