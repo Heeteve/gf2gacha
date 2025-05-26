@@ -2,10 +2,11 @@ package util
 
 import (
 	"gf2gacha/model"
-	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
 	"regexp"
+
+	"github.com/pkg/errors"
 )
 
 func GetLogInfo() (logInfo model.LogInfo, err error) {
@@ -19,6 +20,18 @@ func GetLogInfo() (logInfo model.LogInfo, err error) {
 	if err != nil {
 		return model.LogInfo{}, errors.WithStack(err)
 	}
+
+	// logData补充读取./capture.log
+	captureLogPath := filepath.Join("./capture.log")
+	captureLogData, err := os.ReadFile(captureLogPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return model.LogInfo{}, errors.New("未找到capture.log文件。请先开始抓取，然后启动游戏点击登录")
+		} else {
+			return model.LogInfo{}, errors.WithStack(err)
+		}
+	}
+	logData = append(logData, captureLogData...)
 
 	regexpGamePath, err := regexp.Compile(`\[Subsystems] Discovering subsystems at path (.+)/UnitySubsystems`)
 	if err != nil {

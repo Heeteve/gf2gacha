@@ -3,12 +3,13 @@ package logic
 import (
 	"encoding/json"
 	"gf2gacha/model"
-	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 func FetchRemoteData(gachaUrl, accessToken, next string, poolType int64) (data model.ResponseData, err error) {
@@ -41,6 +42,9 @@ func FetchRemoteData(gachaUrl, accessToken, next string, poolType int64) (data m
 		return model.ResponseData{}, errors.WithStack(err)
 	}
 	if respBody.Code != 0 {
+		if respBody.Message == "token err" {
+			return model.ResponseData{}, errors.New("Token无效或已过期，请重新抓取")
+		}
 		return model.ResponseData{}, errors.Errorf("%s(Code %d)", respBody.Message, respBody.Code)
 	}
 
