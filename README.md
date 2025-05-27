@@ -3,9 +3,13 @@ AI编写，仅自用，大概会有bug，能用就行( ，注意备份抽卡数�
 
 __抓取使用说明：__
 1. 在游戏未登录的状态下，点击 __开始抓取__
-2. __首次抓取时__ 需要安装cert文件夹内的`mitmproxy-ca-cert.cer`证书到`当前用户`>`将所有的证书放入下列存储-受信任的根证书颁发机构`。（叠甲：该证书由[go-mitmproxy](https://github.com/lqqyt2423/go-mitmproxy/blob/main/README_CN.md)通过[mitmproxy](https://docs.mitmproxy.org/stable/concepts/certificates/)签发，本人不保证安全性，若不再使用请及时[删除](https://jingyan.baidu.com/article/6c67b1d659f8612786bb1e50.html))
+2. __首次抓取时__ 需要安装cert文件夹内的`mitmproxy-ca-cert.cer`证书到 `当前用户`>`受信任的根证书颁发机构`。（叠甲：该证书由[go-mitmproxy](https://github.com/lqqyt2423/go-mitmproxy/blob/main/README_CN.md)通过[mitmproxy](https://docs.mitmproxy.org/stable/concepts/certificates/)签发，本人不保证安全性，若不再使用请及时[删除](https://jingyan.baidu.com/article/6c67b1d659f8612786bb1e50.html))
 3. 打开游戏，登录，正常情况应提示抓取成功
 
+安装证书流程：
+![安装证书1.png](doc/%E5%AE%89%E8%A3%85%E8%AF%81%E4%B9%A61.png)
+![安装证书2.png](doc/%E5%AE%89%E8%A3%85%E8%AF%81%E4%B9%A62.png)
+![安装证书3.png](doc/%E5%AE%89%E8%A3%85%E8%AF%81%E4%B9%A63.png)
 
 __常见问题：__
 - __用户中心初始化失败/你的连接不是专用连接__：未安装证书或证书过期，检查是否完成第2步
@@ -24,7 +28,7 @@ __常见问题：__
 
 于是把之前自用的导出程序用更加轻量的`Wails`包了个界面传了上来
 
-![image](sample.png)
+![image](doc/sample.png)
 
 ## 主要功能
 
