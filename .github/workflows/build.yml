@@ -46,10 +46,10 @@ jobs:
       - name: Zip the folder
         run: powershell Compress-Archive -Path gf2gacha -DestinationPath gf2gacha.zip
 
-      - name: Build Changelog
-        run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: Build Changelog
+      #   run: npx changelogithub
+      #   env:
+      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
