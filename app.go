@@ -5,11 +5,13 @@ import (
 	"gf2gacha/config"
 	"gf2gacha/logger"
 	"gf2gacha/logic"
+	"gf2gacha/mitm" // 新增导入 mitm 包
 	"gf2gacha/model"
 	"gf2gacha/util"
+	"strings"
+
 	"github.com/pkg/errors"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
-	"strings"
 )
 
 // App struct
@@ -293,4 +295,37 @@ func (a *App) GetSettingLayout() (int64, error) {
 
 func (a *App) SaveSettingLayout(layoutType int64) error {
 	return config.SetLayout(layoutType)
+}
+
+// StartLogCapture 启动日志抓取
+func (a *App) StartLogCapture() (model.LogInfo, error) {
+	mitmLoginInfo, err := mitm.StartMitmProxyForLogin()
+	if err != nil {
+		logger.Logger.Error(err)
+		return model.LogInfo{}, err
+	}
+
+	captureInfo := model.LogInfo{}
+
+	if mitmLoginInfo != nil {
+		captureInfo.AccessToken = mitmLoginInfo.AccessToken
+		captureInfo.Uid = mitmLoginInfo.Uid
+		// 合并信息
+		baseLogInfo, _ := util.GetLogInfo() // 忽略错误
+		captureInfo.GachaUrl = baseLogInfo.GachaUrl
+		captureInfo.TablePath = baseLogInfo.TablePath
+	} else {
+		return model.LogInfo{}, errors.New("未获取到有效的登录信息")
+	}
+	return captureInfo, nil
+}
+
+// StopLogCapture 停止日志抓取
+func (a *App) StopLogCapture() error {
+	err := mitm.StopMitmProxy()
+	if err != nil {
+		logger.Logger.Error(err)
+		return err
+	}
+	return nil
 }

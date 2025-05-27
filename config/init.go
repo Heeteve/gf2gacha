@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"gf2gacha/logger"
+
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -81,4 +82,17 @@ func GetLayout() int64 {
 func SetLayout(layoutType int64) error {
 	viper.Set("layout", layoutType)
 	return viper.WriteConfig()
+}
+
+func GetAccessToken(uid string) string {
+	return viper.GetString(fmt.Sprintf("%s.accessToken", uid))
+}
+
+func SetAccessToken(uid, token string) error {
+	viper.Set(fmt.Sprintf("%s.accessToken", uid), token)
+	return viper.WriteConfig()
+}
+
+func IsSetAccessToken(uid string) bool {
+	return viper.IsSet(fmt.Sprintf("%s.accessToken", uid))
 }

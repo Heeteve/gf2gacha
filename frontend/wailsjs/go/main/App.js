@@ -74,6 +74,14 @@ export function SaveSettingLayout(arg1) {
   return window['go']['main']['App']['SaveSettingLayout'](arg1);
 }
 
+export function StartLogCapture() {
+  return window['go']['main']['App']['StartLogCapture']();
+}
+
+export function StopLogCapture() {
+  return window['go']['main']['App']['StopLogCapture']();
+}
+
 export function UpdatePoolInfo(arg1) {
   return window['go']['main']['App']['UpdatePoolInfo'](arg1);
 }

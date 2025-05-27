@@ -21,7 +21,7 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:     fmt.Sprintf("少女前线2:追放 抽卡导出分析工具%v Powered by MccWiki抹茶", util.GetVersion()),
+		Title:     fmt.Sprintf("少女前线2:追放 抽卡导出分析工具%v Powered by MccWiki抹茶，临时修改 by Heeteve", util.GetVersion()),
 		Width:     1280,
 		Height:    720,
 		MinWidth:  1280,

@@ -1,3 +1,19 @@
+# 魔改说明
+AI编写，仅自用，大概会有bug，能用就行( ，注意备份抽卡数据库gf2gacha.db
+
+__抓取使用说明：__
+1. 在游戏未登录的状态下，点击 __开始抓取__
+2. __首次抓取时__ 需要安装cert文件夹内的`mitmproxy-ca-cert.cer`证书到`当前用户`>`将所有的证书放入下列存储-受信任的根证书颁发机构`。（叠甲：该证书由[go-mitmproxy](https://github.com/lqqyt2423/go-mitmproxy/blob/main/README_CN.md)通过[mitmproxy](https://docs.mitmproxy.org/stable/concepts/certificates/)签发，本人不保证安全性，若不再使用请及时[删除](https://jingyan.baidu.com/article/6c67b1d659f8612786bb1e50.html))
+3. 打开游戏，登录，正常情况应提示抓取成功
+
+
+__常见问题：__
+- __用户中心初始化失败/你的连接不是专用连接__：未安装证书或证书过期，检查是否完成第2步
+- __token无效或已过期__：从第1步开始重新抓取
+- __抓取完上不了网了?__：1. 确保关闭软件前先停止抓取。2. 请检查Windows代理是否关闭：Windows设置>`网络和Internet`>`代理`>`手动设置代理`>`关`。
+
+---
+
 # 少女前线2:追放 抽卡导出分析工具
 
 ## 为什么做这个工具？
