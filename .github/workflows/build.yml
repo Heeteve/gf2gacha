@@ -46,18 +46,6 @@ jobs:
       - name: Zip the folder
         run: powershell Compress-Archive -Path gf2gacha -DestinationPath gf2gacha.zip
 
-      - name: Build Changelog
-        run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Upload Release Asset
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            gf2gacha.zip
-            gf2gacha.exe
-
       - name: Upload to R2
         uses: ryand56/r2-upload-action@latest
         with:
@@ -69,3 +57,16 @@ jobs:
             build/bin/gf2gacha.exe
             gf2gacha.zip
           destination-dir: gf2gacha/${{ github.ref_name }}/
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            gf2gacha.zip
+            gf2gacha.exe
+      
+
+      - name: Build Changelog
+        run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
