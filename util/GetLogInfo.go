@@ -37,14 +37,14 @@ func GetLogInfo() (logInfo model.LogInfo, err error) {
 	}
 	resultUserInfoList := regexpUserInfo.FindAllSubmatch(logData, -1)
 	if len(resultUserInfoList) == 0 {
-		return model.LogInfo{}, errors.New("未在日志中找到AccessToken或Uid,可能是最近一次游戏启动时未登录")
+		return model.LogInfo{}, errors.New("未在日志中找到AccessToken或Uid,可能是最近一次游戏启动时未登录,官服请使用「捕获信息」按钮抓包")
 	}
 	resultUserInfo := resultUserInfoList[len(resultUserInfoList)-1]
 	if len(resultUserInfo) == 3 {
 		logInfo.AccessToken = string(resultUserInfo[1])
 		logInfo.Uid = string(resultUserInfo[2])
 	} else {
-		return model.LogInfo{}, errors.New("未在日志中找到AccessToken或Uid,可能是最近一次游戏启动时未登录")
+		return model.LogInfo{}, errors.New("未在日志中找到AccessToken或Uid,可能是最近一次游戏启动时未登录,官服请使用「捕获信息」按钮抓包")
 	}
 
 	regexpGachaUrl, err := regexp.Compile(`"gacha_record_url":"(.*?)"`)
@@ -53,7 +53,7 @@ func GetLogInfo() (logInfo model.LogInfo, err error) {
 	}
 	resultGachaUrlList := regexpGachaUrl.FindAllSubmatch(logData, -1)
 	if len(resultGachaUrlList) == 0 {
-		return model.LogInfo{}, errors.New("未在日志中找到抽卡链接")
+		return model.LogInfo{}, errors.New("未在日志中找到抽卡链接,官服请使用「捕获信息」按钮抓包")
 	}
 	resultGachaUrl := resultGachaUrlList[len(resultGachaUrlList)-1]
 	if len(resultGachaUrl) == 2 {

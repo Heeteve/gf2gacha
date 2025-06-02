@@ -8,9 +8,10 @@ import {ElLoading, ElMessage, ElMessageBox} from "element-plus";
 import {Connection, CopyDocument, Setting as SettingIcon} from "@element-plus/icons-vue";
 import {ClipboardSetText} from "../wailsjs/runtime";
 import SettingDialog from "./components/SettingDialog.vue";
+import {useLayoutStore} from "./stores/layout.ts";
+import CaptureDialog from "./components/CaptureDialog.vue";
 import Pool = model.Pool;
 import LogInfo = model.LogInfo;
-import {useLayoutStore} from "./stores/layout.ts";
 
 
 const version = ref('')
@@ -23,6 +24,7 @@ const logInfo = ref<LogInfo>(new LogInfo)
 const loading = ref(false);
 const dialogInfoVisible = ref(false)
 const dialogSettingVisible = ref(false)
+const captureSettingVisible = ref(false)
 
 const getUidList = async () => {
   await GetUserList().then(result => {
@@ -218,6 +220,7 @@ onMounted(async () => {
             </el-dropdown-menu>
           </template>
         </el-dropdown>
+        <el-button type="warning" class="font-bold ml-3" @click="captureSettingVisible=true">捕获信息</el-button>
       </div>
       <div class="flex items-center gap-2">
         <el-button type="primary" class="font-bold" @click="handleCommunityTasks">一键社区</el-button>
@@ -260,5 +263,6 @@ onMounted(async () => {
       </div>
     </el-dialog>
     <SettingDialog v-model="dialogSettingVisible"/>
+    <CaptureDialog v-model="captureSettingVisible"/>
   </div>
 </template>

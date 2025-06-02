@@ -16,6 +16,7 @@ var assets embed.FS
 
 func main() {
 	defer logger.Logger.Sync()
+	defer util.DisableSysProxy()
 	// Create an instance of the app structure
 	app := NewApp()
 

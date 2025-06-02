@@ -2,19 +2,29 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"gf2gacha/config"
 	"gf2gacha/logger"
 	"gf2gacha/logic"
 	"gf2gacha/model"
 	"gf2gacha/util"
+	"github.com/elazarl/goproxy"
 	"github.com/pkg/errors"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"net"
+	"net/http"
+	"os"
 	"strings"
+	"sync"
 )
 
 // App struct
 type App struct {
-	ctx context.Context
+	ctx          context.Context
+	captureMutex sync.Mutex
+	tcpPort      int
+	tcpListener  *net.Listener
+	MitmServer   *http.Server
 }
 
 // NewApp creates a new App application struct
@@ -293,4 +303,128 @@ func (a *App) GetSettingLayout() (int64, error) {
 
 func (a *App) SaveSettingLayout(layoutType int64) error {
 	return config.SetLayout(layoutType)
+}
+
+func (a *App) CaptureStart() error {
+	_, err := os.Stat("ca.crt")
+	if err != nil {
+		err = util.GenCA()
+		if err != nil {
+			return err
+		}
+	}
+
+	if !util.IsTrustedCA() {
+		err = util.InstallCA()
+		if err != nil {
+			return err
+		}
+	}
+
+	if a.tcpListener == nil {
+		for port := 60000; port < 60010; port++ {
+			listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+			if err != nil {
+				logger.Logger.Error(err)
+				continue
+			}
+
+			a.captureMutex.Lock()
+			a.tcpPort = port
+			a.tcpListener = &listener
+			a.captureMutex.Unlock()
+			logger.Logger.Infof("端口%d可用\n", port)
+
+			break
+		}
+	}
+
+	cert, err := util.ParseCA()
+	if err != nil {
+		return err
+	}
+
+	customCaMitm := &goproxy.ConnectAction{Action: goproxy.ConnectMitm, TLSConfig: goproxy.TLSConfigFromCA(cert)}
+	var customAlwaysMitm goproxy.FuncHttpsHandler = func(host string, ctx *goproxy.ProxyCtx) (*goproxy.ConnectAction, string) {
+		return customCaMitm, host
+	}
+
+	proxy := goproxy.NewProxyHttpServer()
+	cond := goproxy.DstHostIs("gf2-gacha-record.sunborngame.com")
+
+	proxy.OnRequest(cond).HandleConnect(customAlwaysMitm)
+	proxy.OnRequest(cond).DoFunc(func(req *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
+		if req.URL.Path == "/list" {
+			gachaUrl := req.URL.String()
+			accessToken := req.Header.Get("Authorization")
+
+			userInfo, err := logic.GetUserInfoFromBBS(accessToken)
+			if err != nil {
+				logger.Logger.Errorf("未从社区获取到用户信息:%v", err)
+				return req, nil
+			}
+
+			err = logic.AppendLog(accessToken, userInfo.User.GameUid, gachaUrl)
+			if err != nil {
+				logger.Logger.Errorf("追加游戏日志失败:%v", err)
+				return req, nil
+			}
+
+			logger.Logger.Infof("uid: %d\n", userInfo.User.GameUid)
+			logger.Logger.Infof("gachaUrl: %s\n", gachaUrl)
+			logger.Logger.Infof("accessToken: %s\n", accessToken)
+
+			runtime.EventsEmit(a.ctx, "captureSuccess")
+		}
+
+		return req, nil
+	})
+
+	//启动监听
+	if a.MitmServer == nil {
+		a.captureMutex.Lock()
+		a.MitmServer = &http.Server{Handler: proxy}
+
+		go func(mitmServer *http.Server, tcpListener *net.Listener) {
+			logger.Logger.Info("捕获协程启动")
+			err := mitmServer.Serve(*tcpListener)
+			if err != nil {
+				if errors.Is(err, http.ErrServerClosed) {
+					logger.Logger.Info("捕获正常停止")
+					return
+				} else {
+					logger.Logger.Errorf("捕获异常停止: %v", err)
+				}
+				a.captureMutex.Lock()
+				a.tcpListener = nil
+				a.MitmServer = nil
+				a.captureMutex.Unlock()
+			}
+		}(a.MitmServer, a.tcpListener)
+
+		util.EnableSysProxy(a.tcpPort)
+
+		a.captureMutex.Unlock()
+	}
+
+	return nil
+}
+
+func (a *App) CaptureClose() error {
+	a.captureMutex.Lock()
+	defer a.captureMutex.Unlock()
+
+	if a.MitmServer != nil {
+		err := a.MitmServer.Shutdown(context.Background())
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
+			logger.Logger.Error(err)
+			return err
+		}
+		a.tcpListener = nil
+		a.MitmServer = nil
+	}
+
+	util.DisableSysProxy()
+
+	return nil
 }
