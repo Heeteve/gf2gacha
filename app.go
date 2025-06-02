@@ -308,8 +308,10 @@ func (a *App) SaveSettingLayout(layoutType int64) error {
 func (a *App) CaptureStart() error {
 	_, err := os.Stat("ca.crt")
 	if err != nil {
+		logger.Logger.Errorf("CA证书不存在:%v", err)
 		err = util.GenCA()
 		if err != nil {
+			logger.Logger.Errorf("生成CA证书出错:%v", err)
 			return err
 		}
 	}
@@ -317,6 +319,7 @@ func (a *App) CaptureStart() error {
 	if !util.IsTrustedCA() {
 		err = util.InstallCA()
 		if err != nil {
+			logger.Logger.Errorf("安装CA证书出错:%v", err)
 			return err
 		}
 	}
@@ -341,6 +344,7 @@ func (a *App) CaptureStart() error {
 
 	cert, err := util.ParseCA()
 	if err != nil {
+		logger.Logger.Errorf("读取CA证书出错:%v", err)
 		return err
 	}
 
@@ -402,7 +406,11 @@ func (a *App) CaptureStart() error {
 			}
 		}(a.MitmServer, a.tcpListener)
 
-		util.EnableSysProxy(a.tcpPort)
+		err = util.EnableSysProxy(a.tcpPort)
+		if err != nil {
+			logger.Logger.Errorf("设置代理信息出错:%v", err)
+			return err
+		}
 
 		a.captureMutex.Unlock()
 	}
@@ -424,7 +432,11 @@ func (a *App) CaptureClose() error {
 		a.MitmServer = nil
 	}
 
-	util.DisableSysProxy()
+	err := util.DisableSysProxy()
+	if err != nil {
+		logger.Logger.Errorf("还原代理信息出错:%v", err)
+		return err
+	}
 
 	return nil
 }

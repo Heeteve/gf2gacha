@@ -5,6 +5,11 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
+var (
+	originProxyServer string
+	originProxyEnable uint32
+)
+
 func EnableSysProxy(port int) error {
 	key, err := registry.OpenKey(
 		registry.CURRENT_USER,
@@ -16,9 +21,21 @@ func EnableSysProxy(port int) error {
 	}
 	defer key.Close()
 
+	proxyServer, _, err := key.GetStringValue("ProxyServer")
+	if err != nil {
+		return err
+	}
+	originProxyServer = proxyServer
+
 	if err := key.SetStringValue("ProxyServer", fmt.Sprintf("127.0.0.1:%d", port)); err != nil {
 		return err
 	}
+
+	proxyEnable, _, err := key.GetIntegerValue("ProxyEnable")
+	if err != nil {
+		return err
+	}
+	originProxyEnable = uint32(proxyEnable)
 
 	if err := key.SetDWordValue("ProxyEnable", 1); err != nil {
 		return err
@@ -38,7 +55,11 @@ func DisableSysProxy() error {
 	}
 	defer key.Close()
 
-	if err := key.SetDWordValue("ProxyEnable", 0); err != nil {
+	if err := key.SetStringValue("ProxyServer", originProxyServer); err != nil {
+		return err
+	}
+
+	if err := key.SetDWordValue("ProxyEnable", originProxyEnable); err != nil {
 		return err
 	}
 
