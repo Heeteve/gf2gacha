@@ -4,22 +4,11 @@ import (
 	"fmt"
 	"gf2gacha/model"
 	"gf2gacha/request"
-	"gf2gacha/util"
 	"github.com/pkg/errors"
 )
 
 func GetCommunityExchangeList() ([]model.CommunityExchangeList, error) {
-	logInfo, err := util.GetLogInfo()
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	webToken, err := request.CommunityLogin(logInfo.AccessToken)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	exchangeListData, err := request.CommunityExchangeList(webToken)
+	exchangeListData, err := request.CommunityExchangeList("")
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
