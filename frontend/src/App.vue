@@ -315,23 +315,25 @@ onMounted(async () => {
                 <p><strong>抓取使用说明：</strong></p>
                 <ol>
                     <li>1. 在游戏未登录的状态下，点击 <strong>开始抓取</strong></li>
-                    <li>2. <strong>首次抓取时</strong>
-                        需要安装cert文件夹内的mitmproxy-ca-cert.cer证书到当前用户&gt;将所有的证书放入下列存储-受信任的根证书颁发机构。（叠甲：该证书由<el-link
-                            type="primary" href="https://github.com/lqqyt2423/go-mitmproxy/blob/main/README_CN.md"
-                            target="_blank">go-mitmproxy</el-link>通过<el-link
-                            type="primary" href="https://docs.mitmproxy.org/stable/concepts/certificates/"
-                            target="_blank">mitmproxy</el-link>签发，本人不保证安全性，若不再使用请及时<el-link
-                            type="primary" href="https://jingyan.baidu.com/article/6c67b1d659f8612786bb1e50.html"
-                            target="_blank">删除</el-link>)</li>
+                    <li>2. <strong>首次抓取时</strong> 需确认证书安装弹窗，安装cert文件夹内的<code>mitmproxy-ca-cert.cer</code>证书到 <code>当前用户</code>&gt;<code>受信任的根证书颁发机构</code>。（叠甲：该证书由
+                        <el-link type="primary" href="https://github.com/lqqyt2423/go-mitmproxy/blob/main/README_CN.md" target="_blank">go-mitmproxy</el-link>
+                        通过
+                        <el-link type="primary" href="https://docs.mitmproxy.org/stable/concepts/certificates/" target="_blank">mitmproxy</el-link>
+                        签发，本人不保证安全性，若不再使用请及时
+                        <el-link type="primary" href="https://jingyan.baidu.com/article/6c67b1d659f8612786bb1e50.html" target="_blank">删除</el-link>
+                        )
+                    </li>
                     <li>3. 打开游戏，登录，正常情况应提示抓取成功</li>
                 </ol>
                 <br>
                 <p><strong>常见问题：</strong></p>
                 <ul>
-                    <li><strong>用户中心初始化失败/你的连接不是专用连接</strong>：未安装证书或证书过期，检查是否完成第2步</li>
+                    <li><strong>用户中心初始化失败/你的连接不是专用连接</strong>：未安装证书或证书过期，检查是否完成证书安装。还不行可以尝试完全重装证书：删除cert文件夹，并参考
+                        <el-link type="primary" href="https://jingyan.baidu.com/article/6c67b1d659f8612786bb1e50.html" target="_blank">删除</el-link>
+                        流程查找并删除所有颁发者为<code>mitmproxy</code>的证书
+                    </li>
                     <li><strong>token无效或已过期</strong>：从第1步开始重新抓取</li>
-                    <li><strong>抓取完上不了网了?</strong>：1. 确保关闭软件前先停止抓取。2.
-                        请检查Windows代理是否关闭：Windows设置&gt;网络和Internet&gt;代理&gt;手动设置代理&gt;关。
+                    <li><strong>抓取完成后上不了网了?</strong>：1. 确保关闭软件前先停止抓取。2. 请检查Windows代理是否关闭：Windows设置&gt;<code>网络和Internet</code>&gt;<code>代理</code>&gt;<code>手动设置代理</code>&gt;<code>关</code>。（这条只适用于 <strong>抓取完成后</strong> ，抓取过程中代理应保持启用且为127.0.0.1 9080）
                     </li>
                 </ul>
             </div>
