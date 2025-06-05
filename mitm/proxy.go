@@ -106,6 +106,12 @@ func (pm *ProxyManager) Start(processors []MitmProcessor) error {
 		}
 	}()
 
+	// 安装证书
+	if err := InstallMitmCert(); err != nil {
+		pm.proxy.Close()
+		return fmt.Errorf("安装证书失败: %v", err)
+	}
+
 	// 设置系统代理
 	proxyURL, _ := url.Parse("http://127.0.0.1:9080")
 	if err := SetSystemProxy(proxyURL); err != nil {
