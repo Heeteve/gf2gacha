@@ -382,7 +382,7 @@ func (a *App) CaptureStart() error {
 
 			logger.Logger.Infof("uid: %d\n", userInfo.User.GameUid)
 			logger.Logger.Infof("gachaUrl: %s\n", gachaUrl)
-			logger.Logger.Infof("accessToken: %s\n", accessToken)
+			//logger.Logger.Infof("accessToken: %s\n", accessToken)
 
 			runtime.EventsEmit(a.ctx, "captureSuccess")
 		}
