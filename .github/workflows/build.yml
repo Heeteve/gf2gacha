@@ -62,8 +62,7 @@ jobs:
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            gf2gacha.zip
+          files:
             gf2gacha.exe
 
       # - name: Upload to R2

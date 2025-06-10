@@ -36,10 +36,9 @@ func GetLogInfo() (logInfo model.LogInfo, err error) {
 	aesKey := encrypt.AesKey
 	captureLogData, err := encrypt.Decrypt(captureLogEncrypt, aesKey)
 	if err != nil {
-		fmt.Printf("解密文件时出错: %v\n", err)
-		os.Exit(1)
+		fmt.Printf("%v\n", err)
+		return model.LogInfo{}, errors.New("解密capture.log失败，请尝试重新捕获")
 	}
-	fmt.Printf("captureLogData: %v\n", captureLogData)
 	logData = append(logData, captureLogData...)
 
 	regexpGamePath, err := regexp.Compile(`\[Subsystems] Discovering subsystems at path (.+)/UnitySubsystems`)
