@@ -19,11 +19,30 @@ jobs:
           (Get-Content "util/Version.go") -replace 'const version = ""', 'const version = "${{ github.ref_name }}"' | Set-Content "util/Version.go"
           (Get-Content "wails.json") -replace '"productVersion": ""', '"productVersion": "${{ github.ref_name }}"' | Set-Content "wails.json"
 
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       - name: Setup GoLang
         uses: actions/setup-go@v5
         with:
           check-latest: true
           go-version: 1.23
+
+      - name: Cache Node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Setup NodeJS
         uses: actions/setup-node@v3
@@ -35,7 +54,9 @@ jobs:
 
       - name: Build App
         working-directory: .
-        run: wails build -webview2 embed -skipbindings -o gf2gacha.exe
+        run: |
+          go generate ./...
+          wails build -webview2 embed -skipbindings -o gf2gacha.exe
 
       - name: Create folder and copy files
         run: |
@@ -46,17 +67,10 @@ jobs:
       - name: Zip the folder
         run: powershell Compress-Archive -Path gf2gacha -DestinationPath gf2gacha.zip
 
-      - name: Upload to R2
-        uses: ryand56/r2-upload-action@latest
-        with:
-          r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
-          r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
-          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          r2-bucket: ${{ secrets.R2_BUCKET }}
-          source-dir: |
-            build/bin/gf2gacha.exe
-            gf2gacha.zip
-          destination-dir: gf2gacha/${{ github.ref_name }}/
+      # - name: Build Changelog
+      #   run: npx changelogithub
+      #   env:
+      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
@@ -64,9 +78,15 @@ jobs:
           files: |
             gf2gacha.zip
             gf2gacha.exe
-      
 
-      - name: Build Changelog
-        run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: Upload to R2
+      #   uses: ryand56/r2-upload-action@latest
+      #   with:
+      #     r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
+      #     r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
+      #     r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      #     r2-bucket: ${{ secrets.R2_BUCKET }}
+      #     source-dir: |
+      #       build/bin/gf2gacha.exe
+      #       gf2gacha.zip
+      #     destination-dir: gf2gacha/${{ github.ref_name }}/

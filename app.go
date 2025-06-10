@@ -7,6 +7,7 @@ import (
 	"gf2gacha/logger"
 	"gf2gacha/logic"
 	"gf2gacha/model"
+	"gf2gacha/request"
 	"gf2gacha/util"
 	"github.com/elazarl/goproxy"
 	"github.com/pkg/errors"
@@ -227,6 +228,11 @@ func (a *App) ExportMccExcel(uid string) (message string, err error) {
 func (a *App) HandleCommunityTasks() (messageList []string, err error) {
 	messageList, err = logic.HandleCommunityTasks()
 	if err != nil {
+		var respData request.CommonResponse
+		if errors.As(err, &respData) && respData.Code == 401 {
+			logger.Logger.Error(err)
+			return nil, errors.New("Token失效，请重新捕获")
+		}
 		logger.Logger.Error(err)
 		return
 	}
