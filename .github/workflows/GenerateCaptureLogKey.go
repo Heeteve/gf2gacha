@@ -9,9 +9,8 @@ import (
 	"os"
 )
 
-// main 函数在 `go generate` 时被调用
 func main() {
-	// AES-256 需要一个 32 字节的密钥
+	// AES-256 使用 32 字节的密钥
 	key := make([]byte, 32)
 	if _, err := rand.Read(key); err != nil {
 		fmt.Fprintf(os.Stderr, "错误: 无法生成随机密钥: %v\n", err)
