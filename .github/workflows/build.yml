@@ -35,9 +35,7 @@ jobs:
 
       - name: Build App
         working-directory: .
-        run: |
-          go generate ./...
-          wails build -webview2 embed -skipbindings -o gf2gacha.exe
+        run: wails build -webview2 embed -skipbindings -o gf2gacha.exe
 
       - name: Create folder and copy files
         run: |
@@ -61,11 +59,12 @@ jobs:
           destination-dir: gf2gacha/${{ github.ref_name }}/
 
       - name: Upload Release Asset
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v2
         with:
-          artifacts: "gf2gacha.zip,gf2gacha.exe"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
+          files: |
+            gf2gacha.zip
+            gf2gacha.exe
+      
 
       - name: Build Changelog
         run: npx changelogithub

@@ -1,8 +1,6 @@
 package util
 
 import (
-	"fmt"
-	"gf2gacha/encrypt"
 	"gf2gacha/model"
 	"github.com/pkg/errors"
 	"os"
@@ -21,25 +19,6 @@ func GetLogInfo() (logInfo model.LogInfo, err error) {
 	if err != nil {
 		return model.LogInfo{}, errors.WithStack(err)
 	}
-
-	// logData补充读取./capture.log
-	captureLogPath := filepath.Join("./capture.log")
-	captureLogEncrypt, err := os.ReadFile(captureLogPath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return model.LogInfo{}, errors.New("未找到捕获记录capture.log，官服请使用「捕获信息」按钮抓包")
-		} else {
-			return model.LogInfo{}, errors.WithStack(err)
-		}
-	}
-	// 进行解密
-	aesKey := encrypt.AesKey
-	captureLogData, err := encrypt.Decrypt(captureLogEncrypt, aesKey)
-	if err != nil {
-		fmt.Printf("%v\n", err)
-		return model.LogInfo{}, errors.New("解密capture.log失败，请尝试重新捕获")
-	}
-	logData = append(logData, captureLogData...)
 
 	regexpGamePath, err := regexp.Compile(`\[Subsystems] Discovering subsystems at path (.+)/UnitySubsystems`)
 	if err != nil {
