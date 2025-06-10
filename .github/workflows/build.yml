@@ -57,13 +57,21 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gf2gacha.zip
-          path: gf2gacha.zip
+          path: gf2gacha.exe
 
+      # softprops/action-gh-release有问题（详见其Issues），暂时改用ncipollo/release-action
+      # - name: Upload Release Asset
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     files: |
+      #       gf2gacha.zip
+      #       gf2gacha.exe
       - name: Upload Release Asset
-        uses: softprops/action-gh-release@v2
+        uses: ncipollo/release-action@v1
         with:
-          files:
-            gf2gacha.exe
+          artifacts: "gf2gacha.zip,gf2gacha.exe"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
 
       # - name: Upload to R2
       #   uses: ryand56/r2-upload-action@latest
