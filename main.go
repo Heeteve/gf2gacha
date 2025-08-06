@@ -6,6 +6,7 @@ import (
 	"gf2gacha/logger"
 	_ "gf2gacha/logger"
 	"gf2gacha/util"
+
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -13,6 +14,8 @@ import (
 
 //go:embed all:frontend/dist
 var assets embed.FS
+
+//go:generate go run .github/workflows/GenerateCaptureLogKey.go
 
 func main() {
 	defer logger.Logger.Sync()
