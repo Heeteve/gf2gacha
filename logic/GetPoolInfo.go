@@ -38,9 +38,9 @@ func GetPoolInfo(uid string, poolType int64) (model.Pool, error) {
 						Lose:  false,
 						Count: pool.StoredCount,
 					})
+					pool.StoredCount = 0
+					pool.Rank5Count++
 				}
-				pool.StoredCount = 0
-				pool.Rank5Count++
 			} else if itemRank == 4 {
 				if strings.HasPrefix(name, "衣装·") {
 					pool.RecordList = append(pool.RecordList, model.DisplayRecord{
