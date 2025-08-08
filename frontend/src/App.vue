@@ -52,6 +52,8 @@ const getAllPoolInfo = async () => {
   await getPoolInfo(1)
   await getPoolInfo(5)
   await getPoolInfo(8)
+  await getPoolInfo(9)
+  await getPoolInfo(10)
 }
 
 const updatePoolInfo = async (isFull: boolean) => {

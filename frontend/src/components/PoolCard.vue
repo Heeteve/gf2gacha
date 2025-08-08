@@ -31,6 +31,10 @@ const title = (): string => {
       return '自选武器池'
     case 8:
       return '神秘箱'
+    case 9:
+      return '皮肤池'
+    case 10:
+      return '皮肤池?'
     default:
       return `未知PoolType: ${props.pool.poolType}`
   }
