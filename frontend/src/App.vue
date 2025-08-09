@@ -12,6 +12,7 @@ import {useLayoutStore} from "./stores/layout.ts";
 import CaptureDialog from "./components/CaptureDialog.vue";
 import Pool = model.Pool;
 import LogInfo = model.LogInfo;
+import semver from "semver";
 
 
 const version = ref('')
@@ -51,6 +52,8 @@ const getAllPoolInfo = async () => {
   await getPoolInfo(1)
   await getPoolInfo(5)
   await getPoolInfo(8)
+  await getPoolInfo(9)
+  await getPoolInfo(10)
 }
 
 const updatePoolInfo = async (isFull: boolean) => {
@@ -150,7 +153,7 @@ const handleCommunityTasks = () => {
 
 const checkUpdate = () => {
   GetLatestVersion().then(latestVersion => {
-    if (latestVersion != version.value) {
+    if (semver.gt(latestVersion, version.value)) {
       ElMessageBox.confirm("有可用的新版本，是否升级", latestVersion, {confirmButtonText: "是", cancelButtonText: "否", type: 'info'}).then(() => {
         const loading = ElLoading.service({lock: true, text: `Update to ${latestVersion}...`, background: 'rgba(0, 0, 0, 0.7)'})
         UpdateTo(latestVersion).catch(err => {
