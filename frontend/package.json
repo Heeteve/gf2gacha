@@ -19,8 +19,10 @@
     "vue-echarts": "^7.0.3"
   },
   "devDependencies": {
+    "@types/semver": "^7.7.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
+    "semver": "^7.7.2",
     "typescript": "~5.7.2",
     "unplugin-auto-import": "^19.1.1",
     "unplugin-vue-components": "^28.4.1",
