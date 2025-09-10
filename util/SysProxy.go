@@ -2,6 +2,8 @@ package util
 
 import (
 	"fmt"
+
+	"github.com/pkg/errors"
 	"golang.org/x/sys/windows/registry"
 )
 
@@ -22,7 +24,7 @@ func EnableSysProxy(port int) error {
 	defer key.Close()
 
 	proxyServer, _, err := key.GetStringValue("ProxyServer")
-	if err != nil {
+	if err != nil && !errors.Is(err, registry.ErrNotExist) {
 		return err
 	}
 	originProxyServer = proxyServer
