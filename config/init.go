@@ -1,8 +1,10 @@
 package config
 
 import (
+	"crypto/md5"
 	"fmt"
 	"gf2gacha/logger"
+
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -80,5 +82,24 @@ func GetLayout() int64 {
 
 func SetLayout(layoutType int64) error {
 	viper.Set("layout", layoutType)
+	return viper.WriteConfig()
+}
+
+func GetAccountName(uid string) string {
+	return viper.GetString(fmt.Sprintf("%s.accountName", uid))
+}
+
+func SetAccountName(uid, accountName string) error {
+	viper.Set(fmt.Sprintf("%s.accountName", uid), accountName)
+	return viper.WriteConfig()
+}
+
+func GetPasswd(uid string) string {
+	return viper.GetString(fmt.Sprintf("%s.passwd", uid))
+}
+
+func SetPasswd(uid, passwd string) error {
+	passwd = fmt.Sprintf("%x", md5.Sum([]byte(passwd)))
+	viper.Set(fmt.Sprintf("%s.passwd", uid), passwd)
 	return viper.WriteConfig()
 }

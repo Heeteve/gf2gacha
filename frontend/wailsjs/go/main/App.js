@@ -18,6 +18,14 @@ export function ExportRawJson(arg1) {
   return window['go']['main']['App']['ExportRawJson'](arg1);
 }
 
+export function GetAccountName(arg1) {
+  return window['go']['main']['App']['GetAccountName'](arg1);
+}
+
+export function GetAccountPasswd(arg1) {
+  return window['go']['main']['App']['GetAccountPasswd'](arg1);
+}
+
 export function GetCommunityExchangeList() {
   return window['go']['main']['App']['GetCommunityExchangeList']();
 }
@@ -68,6 +76,14 @@ export function ImportRawJson(arg1, arg2) {
 
 export function MergeEreRecord(arg1, arg2) {
   return window['go']['main']['App']['MergeEreRecord'](arg1, arg2);
+}
+
+export function SaveAccountName(arg1, arg2) {
+  return window['go']['main']['App']['SaveAccountName'](arg1, arg2);
+}
+
+export function SaveAccountPasswd(arg1, arg2) {
+  return window['go']['main']['App']['SaveAccountPasswd'](arg1, arg2);
 }
 
 export function SaveSettingExchangeList(arg1) {
