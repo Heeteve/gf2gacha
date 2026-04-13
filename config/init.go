@@ -1,6 +1,7 @@
 package config
 
 import (
+	"crypto/md5"
 	"fmt"
 	"gf2gacha/logger"
 	"github.com/pkg/errors"
@@ -89,5 +90,24 @@ func GetCapturePort() int {
 
 func SetCapturePort(port int) error {
 	viper.Set("capturePort", port)
+	return viper.WriteConfig()
+}
+
+func GetAccountName(uid string) string {
+	return viper.GetString(fmt.Sprintf("%s.accountName", uid))
+}
+
+func SetAccountName(uid, accountName string) error {
+	viper.Set(fmt.Sprintf("%s.accountName", uid), accountName)
+	return viper.WriteConfig()
+}
+
+func GetPasswd(uid string) string {
+	return viper.GetString(fmt.Sprintf("%s.passwd", uid))
+}
+
+func SetPasswd(uid, passwd string) error {
+	passwd = fmt.Sprintf("%x", md5.Sum([]byte(passwd)))
+	viper.Set(fmt.Sprintf("%s.passwd", uid), passwd)
 	return viper.WriteConfig()
 }

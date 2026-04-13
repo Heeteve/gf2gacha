@@ -230,8 +230,19 @@ func (a *App) HandleCommunityTasks() (messageList []string, err error) {
 	if err != nil {
 		var respData request.CommonResponse
 		if errors.As(err, &respData) && respData.Code == 401 {
-			logger.Logger.Error(err)
-			return nil, errors.New("Token失效，请重新捕获")
+			logger.Logger.Warn("Token失效，尝试重新登录")
+			messageList, err = logic.HandleCommunityLogin()
+			if err != nil {
+				logger.Logger.Error("重新登录失败: ", err)
+				return nil, fmt.Errorf("社区登录失败：%v<br/>Token失效，请重新捕获", err)
+			}
+			// 登录成功后重试一次社区任务
+			messageList, err = logic.HandleCommunityTasks()
+			if err != nil {
+				logger.Logger.Error(err)
+				return
+			}
+			return
 		}
 		logger.Logger.Error(err)
 		return
@@ -317,6 +328,22 @@ func (a *App) GetSettingCapturePort() int {
 
 func (a *App) SaveSettingCapturePort(port int) error {
 	return config.SetCapturePort(port)
+}
+
+func (a *App) GetAccountName(uid string) string {
+	return config.GetAccountName(uid)
+}
+
+func (a *App) SaveAccountName(uid string, accountName string) error {
+	return config.SetAccountName(uid, accountName)
+}
+
+func (a *App) GetAccountPasswd(uid string) string {
+	return config.GetPasswd(uid)
+}
+
+func (a *App) SaveAccountPasswd(uid string, passwd string) error {
+	return config.SetPasswd(uid, passwd)
 }
 
 func (a *App) CaptureStart() error {

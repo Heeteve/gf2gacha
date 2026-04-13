@@ -5,11 +5,12 @@ import PoolCard from "./components/PoolCard.vue";
 import {model} from "../wailsjs/go/models";
 import 'element-plus/es/components/message/style/css'
 import {ElLoading, ElMessage, ElMessageBox} from "element-plus";
-import {Connection, CopyDocument, Setting as SettingIcon} from "@element-plus/icons-vue";
+import {User, Connection, CopyDocument, Setting as SettingIcon} from "@element-plus/icons-vue";
 import {ClipboardSetText} from "../wailsjs/runtime";
 import SettingDialog from "./components/SettingDialog.vue";
 import {useLayoutStore} from "./stores/layout.ts";
 import CaptureDialog from "./components/CaptureDialog.vue";
+import AccountDialog from "./components/AccountDialog.vue"
 import Pool = model.Pool;
 import LogInfo = model.LogInfo;
 import semver from "semver";
@@ -26,6 +27,7 @@ const loading = ref(false);
 const dialogInfoVisible = ref(false)
 const dialogSettingVisible = ref(false)
 const captureSettingVisible = ref(false)
+const accountSettingVisible = ref(false)
 
 const getUidList = async () => {
   await GetUserList().then(result => {
@@ -147,7 +149,7 @@ const handleCommunityTasks = () => {
   HandleCommunityTasks().then(result => {
     ElMessage({message: result.join("<br/>"), type: 'success', plain: true, showClose: true, duration: 0, dangerouslyUseHTMLString: true})
   }).catch(err => {
-    ElMessage({message: err, type: 'error', plain: true, showClose: true, duration: 0})
+    ElMessage({message: err, type: 'error', plain: true, showClose: true, duration: 0, dangerouslyUseHTMLString: true})
   })
 }
 
@@ -231,7 +233,8 @@ onMounted(async () => {
         <el-select v-model="currentUid" class="!w-28" @change="getAllPoolInfo">
           <el-option v-for="uid in uidList" :key="uid" :label="uid" :value="uid"/>
         </el-select>
-        <el-button text :icon="Connection" circle @click="openInfoDialog"/>
+        <el-button text :icon="User" circle @click="accountSettingVisible = true"/>
+        <el-button class="!ml-0" text :icon="Connection" circle @click="openInfoDialog"/>
         <el-button class="!ml-0" text :icon="SettingIcon" circle @click="dialogSettingVisible = true"/>
       </div>
     </div>
@@ -267,5 +270,6 @@ onMounted(async () => {
     </el-dialog>
     <SettingDialog v-model="dialogSettingVisible"/>
     <CaptureDialog v-model="captureSettingVisible"/>
+    <accountDialog v-model="accountSettingVisible" v-model:currentUid="currentUid"/>
   </div>
 </template>

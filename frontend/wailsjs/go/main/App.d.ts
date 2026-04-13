@@ -10,6 +10,10 @@ export function ExportMccExcel(arg1:string):Promise<string>;
 
 export function ExportRawJson(arg1:string):Promise<string>;
 
+export function GetAccountName(arg1:string):Promise<string>;
+
+export function GetAccountPasswd(arg1:string):Promise<string>;
+
 export function GetCommunityExchangeList():Promise<Array<model.CommunityExchangeList>>;
 
 export function GetCurrentVersion():Promise<string>;
@@ -39,6 +43,10 @@ export function ImportRawJson(arg1:string,arg2:boolean):Promise<string>;
 export function MergeEreRecord(arg1:string,arg2:string):Promise<string>;
 
 export function SaveSettingCapturePort(arg1:number):Promise<void>;
+
+export function SaveAccountName(arg1:string,arg2:string):Promise<void>;
+
+export function SaveAccountPasswd(arg1:string,arg2:string):Promise<void>;
 
 export function SaveSettingExchangeList(arg1:Array<number>):Promise<void>;
 
