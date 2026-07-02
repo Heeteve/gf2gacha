@@ -1,7 +1,7 @@
 package config
 
 import (
-	"crypto/md5"
+	"encoding/base64"
 	"fmt"
 	"gf2gacha/logger"
 
@@ -95,11 +95,13 @@ func SetAccountName(uid, accountName string) error {
 }
 
 func GetPasswd(uid string) string {
-	return viper.GetString(fmt.Sprintf("%s.passwd", uid))
+	b64Passwd := viper.GetString(fmt.Sprintf("%s.passwd", uid))
+	passwd, _ := base64.StdEncoding.DecodeString(b64Passwd[1:])
+	return string(passwd)
 }
 
 func SetPasswd(uid, passwd string) error {
-	passwd = fmt.Sprintf("%x", md5.Sum([]byte(passwd)))
-	viper.Set(fmt.Sprintf("%s.passwd", uid), passwd)
+	b64Passwd := "e" + base64.StdEncoding.EncodeToString([]byte(passwd))
+	viper.Set(fmt.Sprintf("%s.passwd", uid), b64Passwd)
 	return viper.WriteConfig()
 }
