@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {onBeforeMount, onMounted, ref} from "vue";
-import {ExportMccExcel, ExportRawJson, GetCurrentVersion, GetLatestVersion, GetLogInfo, GetPoolInfo, GetSettingFont, GetUserList, HandleCommunityTasks, ImportMccExcel, ImportRawJson, MergeEreRecord, UpdatePoolInfo, UpdateTo} from "../wailsjs/go/main/App";
+import {ExportMccExcel, ExportRawJson, GetCurrentVersion, GetLatestVersion, GetLogInfo, GetPoolInfo, GetSettingAutoCommunity, GetSettingFont, GetUserList, HandleCommunityTasks, ImportMccExcel, ImportRawJson, MergeEreRecord, UpdatePoolInfo, UpdateTo} from "../wailsjs/go/main/App";
 import PoolCard from "./components/PoolCard.vue";
 import {model} from "../wailsjs/go/models";
 import 'element-plus/es/components/message/style/css'
@@ -144,9 +144,9 @@ const copyAccessToken = () => {
 
 const handleCommunityTasks = () => {
   HandleCommunityTasks().then(result => {
-    ElMessage({message: result.join("<br/>"), type: 'success', plain: true, showClose: true, duration: 0, dangerouslyUseHTMLString: true})
+    ElMessage({message: result.join("<br/>"), type: 'success', plain: true, showClose: true, duration: 3000, dangerouslyUseHTMLString: true})
   }).catch(err => {
-    ElMessage({message: err, type: 'error', plain: true, showClose: true, duration: 0, dangerouslyUseHTMLString: true})
+    ElMessage({message: err, type: 'error', plain: true, showClose: true, duration: 2000, dangerouslyUseHTMLString: true})
   })
 }
 
@@ -186,6 +186,12 @@ onMounted(async () => {
     currentUid.value = uidList.value[0]
     await getAllPoolInfo()
   }
+
+  await GetSettingAutoCommunity().then(result => {
+    if (result !== undefined && result) {
+      handleCommunityTasks() // 启动完成后自动执行一键社区任务
+    }
+  })
 
   await GetCurrentVersion().then(res => {
     if (res) {

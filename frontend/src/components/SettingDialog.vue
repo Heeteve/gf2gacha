@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import {onBeforeMount, ref} from "vue";
-import {GetCommunityExchangeList, GetSettingExchangeList, GetSettingFont, GetSettingLayout, SaveSettingExchangeList, SaveSettingFont, SaveSettingLayout} from "../../wailsjs/go/main/App";
+import {GetCommunityExchangeList, GetSettingExchangeList, GetSettingFont, GetSettingLayout, GetSettingAutoCommunity, SaveSettingExchangeList, SaveSettingFont, SaveSettingLayout, SaveSettingAutoCommunity} from "../../wailsjs/go/main/App";
 import {model} from "../../wailsjs/go/models.ts";
 import {ElMessage} from "element-plus";
 import {useLayoutStore} from "../stores/layout.ts";
 import CommunityExchangeList = model.CommunityExchangeList;
+import {Check, Close} from "@element-plus/icons-vue";
 
 const visible = defineModel({type: Boolean, required: true})
 
@@ -27,6 +28,11 @@ const onFontChange = async (newFont: string) => {
 const layoutStore = useLayoutStore()
 const onLayoutChange = async (newLayoutType: number) => {
   await SaveSettingLayout(newLayoutType)
+}
+
+const autoCommunity = ref(false)
+const onAutoCommunityChange = async (newValue: boolean) => {
+  await SaveSettingAutoCommunity(newValue)
 }
 
 onBeforeMount(async () => {
@@ -62,6 +68,12 @@ onBeforeMount(async () => {
       layoutStore.layoutType = result
     }
   })
+
+  await GetSettingAutoCommunity().then(result => {
+    if (result !== undefined) {
+      autoCommunity.value = result
+    }
+  })
 })
 
 </script>
@@ -93,6 +105,10 @@ onBeforeMount(async () => {
           <el-option :key="0" label="宽松" :value="0"/>
           <el-option :key="1" label="紧凑" :value="1"/>
         </el-select>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-24 shrink-0">自动社区</div>
+        <el-switch v-model="autoCommunity" @change="onAutoCommunityChange" inline-prompt :active-icon="Check" :inactive-icon="Close"/>
       </div>
     </div>
   </el-dialog>

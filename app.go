@@ -323,6 +323,14 @@ func (a *App) SaveSettingLayout(layoutType int64) error {
 	return config.SetLayout(layoutType)
 }
 
+func (a *App) GetSettingAutoCommunity() (bool, error) {
+	return config.GetAutoCommunity(), nil
+}
+
+func (a *App) SaveSettingAutoCommunity(autoCommunity bool) error {
+	return config.SetAutoCommunity(autoCommunity)
+}
+
 func (a *App) GetAccountName(uid string) string {
 	return config.GetAccountName(uid)
 }

@@ -46,6 +46,10 @@ export function GetPoolInfo(arg1, arg2) {
   return window['go']['main']['App']['GetPoolInfo'](arg1, arg2);
 }
 
+export function GetSettingAutoCommunity() {
+  return window['go']['main']['App']['GetSettingAutoCommunity']();
+}
+
 export function GetSettingExchangeList() {
   return window['go']['main']['App']['GetSettingExchangeList']();
 }
@@ -84,6 +88,10 @@ export function SaveAccountName(arg1, arg2) {
 
 export function SaveAccountPasswd(arg1, arg2) {
   return window['go']['main']['App']['SaveAccountPasswd'](arg1, arg2);
+}
+
+export function SaveSettingAutoCommunity(arg1) {
+  return window['go']['main']['App']['SaveSettingAutoCommunity'](arg1);
 }
 
 export function SaveSettingExchangeList(arg1) {

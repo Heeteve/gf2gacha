@@ -24,6 +24,8 @@ export function GetLogInfo():Promise<model.LogInfo>;
 
 export function GetPoolInfo(arg1:string,arg2:number):Promise<model.Pool>;
 
+export function GetSettingAutoCommunity():Promise<boolean>;
+
 export function GetSettingExchangeList():Promise<Array<number>>;
 
 export function GetSettingFont():Promise<string>;
@@ -43,6 +45,8 @@ export function MergeEreRecord(arg1:string,arg2:string):Promise<string>;
 export function SaveAccountName(arg1:string,arg2:string):Promise<void>;
 
 export function SaveAccountPasswd(arg1:string,arg2:string):Promise<void>;
+
+export function SaveSettingAutoCommunity(arg1:boolean):Promise<void>;
 
 export function SaveSettingExchangeList(arg1:Array<number>):Promise<void>;
 
