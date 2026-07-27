@@ -2,9 +2,11 @@ package logic
 
 import (
 	"gf2gacha/config"
+	"gf2gacha/encrypt"
 	"gf2gacha/logger"
 	"gf2gacha/request"
 	"gf2gacha/util"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -25,7 +27,17 @@ func HandleCommunityLogin() (messageList []string, err error) {
 		return nil, errors.New("未配置密码")
 	}
 
-	webToken, err := request.CommunityLoginWithAccount(AccountName, Passwd)
+	source := "phone"
+	if strings.Contains(AccountName, "@") {
+		source = "mail"
+	}
+	// 加密账号和密码
+	encryptedAccount := encrypt.LoginAESEncrypt(AccountName)
+	encryptedPasswd := encrypt.LoginAESEncrypt(encrypt.CustomHash(Passwd))
+
+	logger.Logger.Infof(encryptedAccount, encryptedPasswd)
+
+	webToken, err := request.CommunityLoginWithAccount(encryptedAccount, encryptedPasswd, source)
 	if err != nil {
 		var respData request.CommonResponse
 		if errors.As(err, &respData) {

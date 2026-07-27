@@ -2,7 +2,6 @@ package request
 
 import (
 	"encoding/json"
-	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -36,15 +35,11 @@ func CommunityLogin(gameToken string) (webToken string, err error) {
 	return data.Account.Token, nil
 }
 
-func CommunityLoginWithAccount(accountName string, password string) (webToken string, err error) {
+func CommunityLoginWithAccount(encryptedAccount string, encryptedPasswd string, source string) (webToken string, err error) {
 	apiUrl := `https://gf2-bbs-api.sunborngame.com/login/account`
-	source := "phone"
-	if strings.Contains(accountName, "@") {
-		source = "mail"
-	}
 	params := map[string]interface{}{
-		"account_name": accountName,
-		"passwd":       password,
+		"account_name": encryptedAccount,
+		"passwd":       encryptedPasswd,
 		"source":       source,
 	}
 
