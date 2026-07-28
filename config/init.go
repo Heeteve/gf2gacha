@@ -93,6 +93,18 @@ func SetCapturePort(port int) error {
 	return viper.WriteConfig()
 }
 
+func GetAutoCommunity() bool {
+	if !viper.IsSet("autoCommunity") {
+		return true
+	}
+	return viper.GetBool("autoCommunity")
+}
+
+func SetAutoCommunity(autoCommunity bool) error {
+	viper.Set("autoCommunity", autoCommunity)
+	return viper.WriteConfig()
+}
+
 func GetAccountName(uid string) string {
 	return viper.GetString(fmt.Sprintf("%s.accountName", uid))
 }

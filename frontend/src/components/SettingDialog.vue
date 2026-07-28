@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import {onBeforeMount, ref} from "vue";
-import {GetCommunityExchangeList, GetSettingCapturePort, GetSettingExchangeList, GetSettingFont, GetSettingLayout, SaveSettingCapturePort, SaveSettingExchangeList, SaveSettingFont, SaveSettingLayout} from "../../wailsjs/go/main/App";
+import {GetCommunityExchangeList, GetSettingCapturePort, GetSettingExchangeList, GetSettingFont, GetSettingLayout, GetSettingAutoCommunity, SaveSettingCapturePort, SaveSettingExchangeList, SaveSettingFont, SaveSettingLayout, SaveSettingAutoCommunity} from "../../wailsjs/go/main/App";
 import {model} from "../../wailsjs/go/models.ts";
 import {ElMessage} from "element-plus";
 import {useLayoutStore} from "../stores/layout.ts";
 import CommunityExchangeList = model.CommunityExchangeList;
+import {Check, Close} from "@element-plus/icons-vue";
 
 const visible = defineModel({type: Boolean, required: true})
 
@@ -32,6 +33,11 @@ const onLayoutChange = async (newLayoutType: number) => {
 const capturePort = ref<number | null>(null)
 const onPortChange = async (newPort: number) => {
   await SaveSettingCapturePort(newPort)
+}
+
+const autoCommunity = ref(false)
+const onAutoCommunityChange = async (newValue: boolean) => {
+  await SaveSettingAutoCommunity(newValue)
 }
 
 onBeforeMount(async () => {
@@ -71,6 +77,12 @@ onBeforeMount(async () => {
   await GetSettingCapturePort().then(result => {
     if (result) {
       capturePort.value = result
+    }
+  })
+
+  await GetSettingAutoCommunity().then(result => {
+    if (result !== undefined) {
+      autoCommunity.value = result
     }
   })
 })
@@ -116,6 +128,10 @@ onBeforeMount(async () => {
           controls-position="right"
           style="width: 50%"
         />
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-24 shrink-0">自动社区</div>
+        <el-switch v-model="autoCommunity" @change="onAutoCommunityChange" inline-prompt :active-icon="Check" :inactive-icon="Close"/>
       </div>
     </div>
   </el-dialog>

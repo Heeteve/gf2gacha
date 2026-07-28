@@ -26,6 +26,8 @@ export function GetPoolInfo(arg1:string,arg2:number):Promise<model.Pool>;
 
 export function GetSettingCapturePort():Promise<number>;
 
+export function GetSettingAutoCommunity():Promise<boolean>;
+
 export function GetSettingExchangeList():Promise<Array<number>>;
 
 export function GetSettingFont():Promise<string>;
@@ -47,6 +49,8 @@ export function SaveSettingCapturePort(arg1:number):Promise<void>;
 export function SaveAccountName(arg1:string,arg2:string):Promise<void>;
 
 export function SaveAccountPasswd(arg1:string,arg2:string):Promise<void>;
+
+export function SaveSettingAutoCommunity(arg1:boolean):Promise<void>;
 
 export function SaveSettingExchangeList(arg1:Array<number>):Promise<void>;
 
